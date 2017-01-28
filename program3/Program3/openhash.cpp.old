@@ -1,0 +1,97 @@
+/* 
+ * File:   openhash.cpp
+ * Author: Alex Hollis
+ *
+ * Created on February 26, 2015, 9:32 PM
+ */
+
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+#include <stdio.h>
+
+using namespace std;
+
+/*
+ * 
+ */
+
+int hashKey(string input) {
+
+    int sum, length, key;
+
+    length = input.length(); //length of string
+
+    for (int i = 0; i < length; i++) {
+        sum += int(input[i]); //adding ASCII values of each character in string to sum.
+
+    }
+
+    key = (sum / length) % 100; // creating a key by getting the average ASCII value (divide sum by length of string), then mod by 100 to keep in table limits.
+    if(key >= 100) key = 99;
+    return key;
+
+}
+
+int main() {
+
+
+    vector< vector<string> > hashTable; //initialize hash table, 100 buckets, using vectors to chain strings.
+    vector<string> buffer;
+    hashTable.resize(100);
+    for (int j = 0; j < 100; j++)
+        hashTable[j].resize(15);
+
+    string buff;
+    int key;
+    int collisions = 0;
+    freopen("program3input.dat", "r", stdin);
+    while (cin >> buff) {
+        buffer.push_back(buff);
+    }
+    int placeholder =0;
+    while(placeholder < buffer.size())
+    {
+        key = hashKey(buff);
+        
+        if(hashTable[key].empty())
+        {
+            (hashTable[key]).push_back(buffer[placeholder]);
+            
+            placeholder++;
+        }
+        else {
+            
+            (hashTable[key]).push_back(buffer[placeholder]);
+            
+            collisions++;
+            placeholder++;
+        }
+        
+        
+    }
+
+
+
+// printing out the table //
+
+cout << "Collisions: " << collisions << endl;
+
+for (int bucket = 0; bucket < 100; bucket++) {
+    cout << bucket << ": ";
+
+    if (!hashTable[bucket].empty()) //if bucket is not empty, print out the names.
+    {
+        for (int x = 0; x < hashTable[bucket].size(); x++) {
+            cout << hashTable[bucket][x] << " ";
+
+        }
+        cout << endl;
+    } else cout << "empty" << endl; //if it is empty, print out empty.
+
+}
+
+
+return 0;
+}
+
